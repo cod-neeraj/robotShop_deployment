@@ -1,10 +1,10 @@
 resources:
   - persistantVolumeRabbit.yaml
-  - persistantVolumeClaimRabbit.yaml
+  - persistantVolumeRabbitClaim.yaml
   - persistantVolumeRedis.yaml
-  - persistantVolumeClaimRedis.yaml
+  - persistantVolumeRedisClaim.yaml
   - rabbitHeadlessService.yaml
-  - rabbotService.yaml
+  - rabbitService.yaml
   - redisHeadlessService.yaml
   - redisService.yaml
   - statefulDeployRabbit.yaml
