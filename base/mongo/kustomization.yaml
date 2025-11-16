@@ -4,4 +4,3 @@ resources:
   - persistantVolume.yaml
   - persistanVolumeClaim.yaml
   - service.yaml
-  - statefulDeploy.yaml
