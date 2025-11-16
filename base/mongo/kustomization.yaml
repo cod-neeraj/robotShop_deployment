@@ -1,0 +1,7 @@
+resources:
+  - headlessService.yaml
+  - mongoStatefulSet.yaml
+  - persistantVolume.yaml
+  - persistantVolumeClaim.yaml
+  - service.yaml
+  - statefulDeploy.yaml

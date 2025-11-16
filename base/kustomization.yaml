@@ -1,0 +1,12 @@
+resources:
+ - mongo
+ - redis_rabbit
+ - mysql
+ - cart
+ - catalogue
+ - payment
+ - dispatch
+ - user
+ - ratings
+ - shipping
+ - web
