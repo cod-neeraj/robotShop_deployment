@@ -2,6 +2,6 @@ resources:
   - headlessService.yaml
   - statefulDeploy.yaml
   - persistantVolume.yaml
-  - persistantVolumeClaim.yaml
+  - persistanVolumeClaim.yaml
   - service.yaml
   - statefulDeploy.yaml
