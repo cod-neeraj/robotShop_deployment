@@ -16,6 +16,17 @@ spec:
     spec:
       nodeSelector:
         role: app
+      initContainers:
+       - name: wait-for-catalogue
+         image: busybox
+         command:
+         - sh
+         - -c
+         - |
+          until nslookup catalogue-service >/dev/null 2>&1; do
+          echo "Waiting for catalogue service..."
+            sleep 2
+            done
       containers:
         - name: web
           image: robotshop/rs-web:2.1.0
