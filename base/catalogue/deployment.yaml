@@ -43,6 +43,8 @@ spec:
           ports:
             - containerPort: 80
           env:
+            - name: INSTANA_DISABLED
+              value: "true"
             - name: MONGODB_HOST
               value: mongo-headless
 ---
