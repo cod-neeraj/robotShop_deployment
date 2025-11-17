@@ -23,7 +23,7 @@ spec:
          - sh
          - -c
          - |
-          until nslookup catalogue-service >/dev/null 2>&1; do
+          until nslookup catalogue >/dev/null 2>&1; do
           echo "Waiting for catalogue service..."
             sleep 2
             done
