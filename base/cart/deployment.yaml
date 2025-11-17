@@ -20,10 +20,10 @@ spec:
       affinity:
         podAntiAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
-          - labelSelector:
-              matchLabels:
-                app: cart
-            topologyKey: kubernetes.io/hostname
+            - labelSelector:
+                matchLabels:
+                  app: cart
+              topologyKey: kubernetes.io/hostname
 
       initContainers:
         - name: wait-for-redis
