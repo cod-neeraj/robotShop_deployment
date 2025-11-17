@@ -19,10 +19,10 @@ spec:
         - name: mongo
           image: robotshop/rs-mongodb:2.1.0
           ports:
-            - containerPort: 3306
+            - containerPort: 27017    # FIXED
           volumeMounts:
             - name: mongo-storage
-              mountPath: /var/lib/mongo
+              mountPath: /data/db      # FIXED
               subPath: mongo
       volumes:
         - name: mongo-storage

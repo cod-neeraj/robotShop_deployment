@@ -34,12 +34,7 @@ spec:
             - name: rabbit-storage
               mountPath: /var/lib/rabbitmq
 
-  volumeClaimTemplates:
-    - metadata:
-        name: rabbit-storage
-      spec:
-        accessModes:
-          - ReadWriteOnce
-        resources:
-          requests:
-            storage: 1Gi
+  volumes:
+        - name: rabbit-storage
+          persistentVolumeClaim:
+            claimName: rabbit-pvc
