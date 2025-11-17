@@ -33,8 +33,8 @@ spec:
           - |
            echo "Waiting for Mysql..."
            until nc -z mysql-headless 3306 >/dev/null 2>&1; do
-           echo "Mysql not ready, retrying..."
-           sleep 2
+             echo "Mygsql not ready, retrying..."
+             sleep 2
            done
            echo "Mysql is ready!"
 
