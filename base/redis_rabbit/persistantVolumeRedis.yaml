@@ -10,3 +10,4 @@ spec:
     - ReadWriteOnce
   hostPath:
     path: "/mnt/data/data"
+    type: DirectoryOrCreate

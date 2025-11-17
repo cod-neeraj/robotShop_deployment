@@ -10,3 +10,4 @@ spec:
     - ReadWriteOnce
   hostPath:
     path: "/mnt/data/rabbitmq"
+    type: DirectoryOrCreate
