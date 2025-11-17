@@ -1,18 +1,18 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: catalogue
+  name: catalogue-dep
   labels:
-    app: catalogue
+    app: catalogue-dep
 spec:
   replicas: 4
   selector:
     matchLabels:
-      app: catalogue
+      app: catalogue-dp
   template:
     metadata:
       labels:
-        app: catalogue
+        app: catalogue-dp
     spec:
       nodeSelector:
         role: app
@@ -22,7 +22,7 @@ spec:
           requiredDuringSchedulingIgnoredDuringExecution:
           - labelSelector:
               matchLabels:
-                app: catalogue
+                app: catalogue-dp
             topologyKey: kubernetes.io/hostname
       initContainers:
         - name: wait-for-mongo
@@ -49,10 +49,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: catalogue-service
+  name: catalogue
 spec:
   selector:
-    app: catalogue
+    app: catalogue-dp
   type: NodePort
   ports:
     - port: 80
