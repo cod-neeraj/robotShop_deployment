@@ -16,7 +16,8 @@ spec:
     spec:
       nodeSelector:
         role: app
-        affinity:
+
+      affinity:
         podAntiAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
           - labelSelector:
