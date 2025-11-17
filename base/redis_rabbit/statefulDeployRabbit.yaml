@@ -22,9 +22,11 @@ spec:
 
           env:
             - name: RABBITMQ_DEFAULT_USER
-              value: "guest"
+              value: "robot"
             - name: RABBITMQ_DEFAULT_PASS
-              value: "guest"
+              value: "roboshop"
+            - name: RABBITMQ_DEFAULT_VHOST
+              value: "/"
 
           ports:
             - containerPort: 5672
