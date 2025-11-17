@@ -34,7 +34,7 @@ spec:
             - name: rabbit-storage
               mountPath: /var/lib/rabbitmq
 
-  volumes:
+      volumes:
         - name: rabbit-storage
           persistentVolumeClaim:
             claimName: rabbit-pvc
