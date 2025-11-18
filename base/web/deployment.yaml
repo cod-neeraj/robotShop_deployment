@@ -36,6 +36,9 @@ spec:
           image: robotshop/rs-web:2.1.0
           ports:
             - containerPort: 8080
+          env:
+          - name: INSTANA_DISABLED
+            value: "true"
 ---
 apiVersion: v1
 kind: Service
