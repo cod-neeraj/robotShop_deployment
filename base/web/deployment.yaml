@@ -17,18 +17,19 @@ spec:
       nodeSelector:
         role: app
       initContainers:
-      - name: wait-for-catalogue
-        image: busybox:1.36
-        command:
-        - sh
-        - -c
-        - |
-         echo "Waiting for catalogue..."
-         until nc -z catalogue 80; do
-           echo "Catalogue not ready, retrying..."
-           sleep 2
-         done
-         echo "Catalogue is ready!"
+       - name: wait-for-catalogue
+         image: busybox:1.36
+         command:
+         - sh
+         - -c
+         - |
+          echo "Waiting for catalogue..."
+          until nc -z catalogue 8080; do
+             echo "Catalogue not ready, retrying..."
+             sleep 2
+          done
+          echo "Catalogue is ready!"
+
 
       containers:
         - name: web
