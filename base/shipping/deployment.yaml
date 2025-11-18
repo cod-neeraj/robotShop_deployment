@@ -42,7 +42,7 @@ spec:
         - name: shipping
           image: robotshop/rs-shipping:2.1.0
           ports:
-            - containerPort: 80
+            - containerPort: 8080
           env:
             - name: MYSQL_HOST
               value: mysql-headless
@@ -54,8 +54,6 @@ metadata:
 spec:
   selector:
     app: shipping
-  type: NodePort
   ports:
-    - port: 80
-      targetPort: 80
-      nodePort: 30085
+    - port: 8080
+      targetPort: 8080

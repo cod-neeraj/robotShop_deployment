@@ -50,15 +50,6 @@ spec:
             - name: MONGODB_HOST
               value: mongo-headless
 
-          readinessProbe:
-            httpGet:
-              path: /health
-              port: 8080
-            initialDelaySeconds: 5
-            periodSeconds: 3
-            timeoutSeconds: 2
-            failureThreshold: 10
-
 ---
 apiVersion: v1
 kind: Service
@@ -67,8 +58,6 @@ metadata:
 spec:
   selector:
     app: catalogue-dp
-  type: NodePort
   ports:
     - port: 8080
       targetPort: 8080
-      nodePort: 30081
