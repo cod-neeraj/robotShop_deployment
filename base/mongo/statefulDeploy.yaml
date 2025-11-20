@@ -14,7 +14,19 @@ spec:
         app: mongo
     spec:
       nodeSelector:
-        role: mongodb
+        role: db 
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: app
+                      operator: In
+                      values:
+                        - mongo 
+                topologyKey: kubernetes.io/hostname
       containers:
         - name: mongo
           image: robotshop/rs-mongodb:2.1.0
@@ -30,4 +42,4 @@ spec:
         accessModes: ["ReadWriteOnce"]
         resources:
           requests:
-            storage: 1Gi
+            storage: 5Gi

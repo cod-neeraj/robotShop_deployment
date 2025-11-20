@@ -4,7 +4,7 @@ metadata:
   name: rabbit
 spec:
   serviceName: rabbit-headless
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
       app: rabbit
@@ -14,7 +14,18 @@ spec:
         app: rabbit
     spec:
       nodeSelector:
-        role: rabbitredisdb
+        role: db
+        affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: app
+                      operator: In
+                      values:
+                        - rabbit
 
       containers:
         - name: rabbit
