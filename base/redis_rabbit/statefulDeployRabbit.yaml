@@ -26,6 +26,7 @@ spec:
                       operator: In
                       values:
                         - rabbit
+                topologyKey: kubernetes.io/hostname
       containers:
         - name: rabbit
           image: rabbitmq:3.8-management-alpine

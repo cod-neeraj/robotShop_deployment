@@ -26,6 +26,7 @@ spec:
                       operator: In
                       values:
                         - redis
+                topologyKey: kubernetes.io/hostname
       containers:
         - name: redis
           image: redis:6.2-alpine
