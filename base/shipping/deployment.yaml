@@ -50,7 +50,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: shipping-service
+  name: shipping
 spec:
   selector:
     app: shipping
