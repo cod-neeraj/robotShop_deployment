@@ -15,7 +15,7 @@ spec:
     spec:
       nodeSelector:
         role: db
-        
+
       affinity:
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
@@ -47,8 +47,11 @@ spec:
           volumeMounts:
             - name: rabbit-storage
               mountPath: /var/lib/rabbitmq
-
-      volumes:
-        - name: rabbit-storage
-          persistentVolumeClaim:
-            claimName: rabbit-pvc
+  volumeClaimTemplates:
+    - metadata:
+        name: rabbit-storage
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 1Gi
