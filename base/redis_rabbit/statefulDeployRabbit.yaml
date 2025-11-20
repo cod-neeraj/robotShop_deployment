@@ -15,6 +15,7 @@ spec:
     spec:
       nodeSelector:
         role: db
+        
       affinity:
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
