@@ -26,7 +26,6 @@ spec:
                       operator: In
                       values:
                         - rabbit
-
       containers:
         - name: rabbit
           image: rabbitmq:3.8-management-alpine
