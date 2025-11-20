@@ -52,7 +52,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: dispatch-service
+  name: dispatch
 spec:
   selector:
     app: dispatch
