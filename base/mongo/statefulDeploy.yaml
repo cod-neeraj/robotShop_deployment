@@ -4,7 +4,7 @@ metadata:
   name: mongo
 spec:
   serviceName: mongo-headless
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
       app: mongo
@@ -19,12 +19,15 @@ spec:
         - name: mongo
           image: robotshop/rs-mongodb:2.1.0
           ports:
-            - containerPort: 27017    # FIXED
+            - containerPort: 27017
           volumeMounts:
             - name: mongo-storage
-              mountPath: /data/db      # FIXED
-              subPath: mongo
-      volumes:
-        - name: mongo-storage
-          persistentVolumeClaim:
-            claimName: mongo-pvc
+              mountPath: /data/db
+  volumeClaimTemplates:
+    - metadata:
+        name: mongo-storage
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 1Gi

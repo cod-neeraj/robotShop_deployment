@@ -4,7 +4,7 @@ metadata:
   name: mysql
 spec:
   serviceName: mysql-headless
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
       app: mysql
@@ -24,7 +24,11 @@ spec:
             - name: mysql-storage
               mountPath: /var/lib/mysql
               subPath: mysql 
-      volumes:
-        - name: mysql-storage
-          persistentVolumeClaim:
-            claimName: mysql-pvc
+  volumeClaimTemplates:
+    - metadata:
+        name: mysql-storage
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 1Gi
