@@ -15,10 +15,10 @@ spec:
     spec:
       nodeSelector:
         role: db 
-        
+
       affinity:
         podAntiAffinity:
-          preferredDuringSchedulingIgnoredDuringExecution:
+          requiredDuringSchedulingIgnoredDuringExecution:
             - weight: 100
               podAffinityTerm:
                 labelSelector:
