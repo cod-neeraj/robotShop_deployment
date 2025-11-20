@@ -14,7 +14,7 @@ spec:
         app: rabbit
     spec:
       nodeSelector:
-        role: db
+        node-role: db
 
       affinity:
         podAntiAffinity:

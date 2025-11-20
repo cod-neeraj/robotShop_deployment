@@ -14,7 +14,7 @@ spec:
         app: mysql
     spec:
       nodeSelector:
-        role: db
+        node-role: db
 
       affinity:
         podAntiAffinity:

@@ -15,7 +15,7 @@ spec:
         app: web
     spec:
       nodeSelector:
-        role: app
+        node-role: app
       initContainers:
        - name: wait-for-catalogue
          image: busybox:1.36

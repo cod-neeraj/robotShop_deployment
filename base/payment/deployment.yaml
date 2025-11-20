@@ -15,7 +15,7 @@ spec:
         app: payment
     spec:
       nodeSelector:
-        role: app
+        node-role: app
 
       affinity:
         podAntiAffinity:
