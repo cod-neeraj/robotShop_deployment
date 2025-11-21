@@ -1,0 +1,20 @@
+{{- if .Values.services.shipping.autoscaling.enabled }}
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ .Values.services.shipping.name }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ .Values.services.shipping.name }}
+  minReplicas: {{ .Values.services.shipping.autoscaling.minReplicas }}
+  maxReplicas: {{ .Values.services.shipping.autoscaling.maxReplicas }}
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.services.shipping.autoscaling.targetCPUUtilizationPercentage }}
+{{- end }}

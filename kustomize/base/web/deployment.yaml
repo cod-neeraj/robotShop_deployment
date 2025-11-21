@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web
+  labels:
+    app: web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: web
+  template:
+    metadata:
+      labels:
+        app: web
+    spec:
+      nodeSelector:
+        node-role: app
+      initContainers:
+       - name: wait-for-catalogue
+         image: busybox:1.36
+         command:
+         - sh
+         - -c
+         - |
+          echo "Waiting for catalogue..."
+          until nc -z catalogue 8080; do
+             echo "Catalogue not ready, retrying..."
+             sleep 2
+          done
+          echo "Catalogue is ready!"
+
+
+      containers:
+        - name: web
+          image: robotshop/rs-web:2.1.0
+          ports:
+            - containerPort: 8080
+          env:
+          - name: INSTANA_DISABLED
+            value: "true"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: web-service
+spec:
+  selector:
+    app: web
+  type: NodePort
+  ports:
+    - port: 8080
+      targetPort: 8080
+      nodePort: 30081

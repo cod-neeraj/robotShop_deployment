@@ -1,0 +1,78 @@
+services:
+  cart:
+    name: "cart"
+    image: "robotshop/rs-cart:2.1.0"
+    port: 8080
+    replicas: 5
+    autoscaling:
+      enabled: true
+      minReplicas: 2
+      maxReplicas: 10
+      targetCPUUtilizationPercentage: 70
+
+  catalogue:
+    name: "catalogue"
+    image: "robotshop/rs-catalogue:2.1.0"
+    port: 8080
+    replicas: 5
+    autoscaling:
+      enabled: true
+      minReplicas: 2
+      maxReplicas: 10
+      targetCPUUtilizationPercentage: 70
+  
+  dispatch:
+    name: "dispatch"
+    image: "robotshop/rs-dispatch:2.1.0"
+    port: 8080
+    replicas: 5
+    autoscaling:
+      enabled: true
+      minReplicas: 2
+      maxReplicas: 10
+      targetCPUUtilizationPercentage: 50
+
+  payment:
+    name: "payment"
+    image: "robotshop/rs-payment:2.1.0"
+    port: 8080
+    replicas: 5
+    autoscaling:
+      enabled: true
+      minReplicas: 2
+      maxReplicas: 10
+      targetCPUUtilizationPercentage: 60
+
+  ratings:
+    name: "ratings"
+    image: "robotshop/rs-ratings:2.1.0"
+    port: 8080
+    replicas: 5
+    autoscaling:
+      enabled: true
+      minReplicas: 2
+      maxReplicas: 10
+      targetCPUUtilizationPercentage: 60
+
+  shipping:
+    name: "shipping"
+    image: "robotshop/rs-shipping:2.1.0"
+    port: 8080
+    replicas: 5
+    autoscaling:
+      enabled: true
+      minReplicas: 2
+      maxReplicas: 10
+      targetCPUUtilizationPercentage: 60
+
+  user:
+    name: "user"
+    image: "robotshop/rs-user:2.1.0"
+    port: 8080
+    replicas: 5
+    autoscaling:
+      enabled: true
+      minReplicas: 2
+      maxReplicas: 10
+      targetCPUUtilizationPercentage: 60
+

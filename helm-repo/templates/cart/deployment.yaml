@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.services.cart.name }}
+  labels:
+    app: {{ .Values.services.cart.name }}
+spec:
+  replicas: {{ .Values.services.cart.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.services.cart.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.services.cart.name }}
+    spec:
+      nodeSelector:
+        node-role: app
+
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchLabels:
+                  app: {{ .Values.services.cart.name }}
+              topologyKey: kubernetes.io/hostname
+
+      initContainers:
+        - name: wait-for-redis
+          image: busybox:1.36
+          command:
+            - sh
+            - -c
+            - |
+              echo "Waiting for Redis..."
+              until nc -z redis-headless 6379 >/dev/null 2>&1; do
+                echo "Redis not ready, retrying..."
+                sleep 2
+              done
+              echo "Redis is ready!"
+
+      containers:
+        - name: {{ .Values.services.cart.name }}
+          image: {{ .Values.services.cart.image }}
+          ports:
+            - containerPort: 80
+          env:
+            - name: INSTANA_DISABLED
+              value: "true"
+            - name: REDIS_HOST
+              value: redis-headless

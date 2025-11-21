@@ -1,0 +1,20 @@
+{{- if .Values.services.payment.autoscaling.enabled }}
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ .Values.services.payment.name }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ .Values.services.payment.name }}
+  minReplicas: {{ .Values.services.payment.autoscaling.minReplicas }}
+  maxReplicas: {{ .Values.services.payment.autoscaling.maxReplicas }}
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.services.payment.autoscaling.targetCPUUtilizationPercentage }}
+{{- end }}

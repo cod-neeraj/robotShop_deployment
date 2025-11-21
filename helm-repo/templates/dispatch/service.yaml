@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.services.dispatch.name }}
+spec:
+  selector:
+    app: {{ .Values.services.dispatch.name }}
+  ports:
+    - port: 8080
+      targetPort: 8080

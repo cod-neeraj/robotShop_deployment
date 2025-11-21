@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.services.catalogue.name }}
+  labels:
+    app: {{ .Values.services.catalogue.name }}
+spec:
+  replicas: {{ .Values.services.catalogue.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.services.catalogue.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.services.catalogue.name }}
+    spec:
+      nodeSelector:
+        node-role: app
+
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchLabels:
+                app: {{ .Values.services.catalogue.name }}
+            topologyKey: kubernetes.io/hostname
+
+      initContainers:
+        - name: wait-for-mongo
+          image: busybox:1.36
+          command:
+            - sh
+            - -c
+            - |
+              echo "Waiting for Mongo..."
+              until nc -z mongo-headless 27017 >/dev/null 2>&1; do
+                echo "Mongo not ready, retrying..."
+                sleep 2
+              done
+              echo "Mongo is ready!"
+
+      containers:
+        - name: {{ .Values.services.catalogue.name }}
+          image: {{ .Values.services.catalogue.image }}
+          ports:
+            - containerPort: 8080
+          env:
+            - name: INSTANA_DISABLED
+              value: "true"
+            - name: MONGODB_HOST
+              value: mongo-headless
+
+

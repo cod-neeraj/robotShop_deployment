@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.services.cart.name }}
+spec:
+  selector:
+    app: {{ .Values.services.cart.name }}
+  ports:
+    - port: {{ .Values.services.cart.port }}
+      targetPort: {{ .Values.services.cart.port }}

@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.services.shipping.name }}
+  labels:
+    app: {{ .Values.services.shipping.name }}
+spec:
+  replicas: {{ .Values.services.shipping.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.services.shipping.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.services.shipping.name }}
+    spec:
+      nodeSelector:
+        node-role: app
+
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchLabels:
+                app: {{ .Values.services.shipping.name }}
+            topologyKey: kubernetes.io/hostname
+      initContainers:
+       - name: wait-for-mysql
+         image: busybox:1.36
+         command:
+          - sh
+          - -c
+          - |
+           echo "Waiting for Mysql..."
+           until nc -z mysql-headless 3306 >/dev/null 2>&1; do
+           echo "Mysql not ready, retrying..."
+           sleep 2
+           done
+           echo "Mysql is ready!"
+
+      containers:
+        - name: {{ .Values.services.shipping.name }}
+          image: {{ .Values.services.shipping.image }}
+          ports:
+            - containerPort: 8080
+          env:
+            - name: MYSQL_HOST
+              value: mysql-headless

@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.services.payment.name }}
+  labels:
+    app: {{ .Values.services.payment.name }}
+spec:
+  replicas: {{ .Values.services.payment.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.services.payment.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.services.payment.name }}
+    spec:
+      nodeSelector:
+        node-role: app
+
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchLabels:
+                app: {{ .Values.services.payment.name }}
+            topologyKey: kubernetes.io/hostname
+      initContainers:
+       - name: wait-for-payment
+         image: busybox:1.36
+         command:
+          - sh
+          - -c
+          - |
+           echo "Waiting for RabbitMQ..."
+           until nc -z rabbit-headless 5672 >/dev/null 2>&1; do
+           echo "RabbitMQ not ready, retrying..."
+           sleep 2
+           done
+           echo "RabbitMQ is ready!"
+
+      containers:
+        - name: {{ .Values.services.payment.name }}
+          image: {{ .Values.services.payment.image }}
+          ports:
+            - containerPort: 8080
+          env:
+            - name: INSTANA_DISABLED
+              value: "true"
+            - name: RABBITMQ_HOST
+              value: rabbit-headless
