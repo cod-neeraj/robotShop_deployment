@@ -4,7 +4,7 @@ metadata:
   name: rabbit
 spec:
   serviceName: rabbit-headless
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: rabbit
