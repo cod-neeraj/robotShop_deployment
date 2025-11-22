@@ -4,7 +4,7 @@ metadata:
   name: catalogue
 spec:
   selector:
-    app: catalogue-dp
+    app: {{ .Values.services.catalogue.name }}
   ports:
     - port: 8080
       targetPort: 8080
