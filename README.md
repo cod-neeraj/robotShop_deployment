@@ -149,7 +149,20 @@ Both outputs drive the same multi-node cluster setup.
 
 ## ArgoCD Integration
 
-(Insert screenshots here once ready)
+<img width="1377" height="427" alt="image" src="https://github.com/user-attachments/assets/3e1c9eea-1b3d-49fd-8671-ce7e6f783a23" />
+<img width="1395" height="441" alt="image" src="https://github.com/user-attachments/assets/091cc461-b8c8-419b-b9a1-fc2e470859aa" />
+<img width="941" height="432" alt="image" src="https://github.com/user-attachments/assets/264caed0-2ee4-4489-b3f6-36423e0b6cd1" />
+<img width="247" height="573" alt="image" src="https://github.com/user-attachments/assets/807b39de-f18e-4a58-94b5-47ab079b01e3" />
+<img width="240" height="562" alt="image" src="https://github.com/user-attachments/assets/cae824b0-88e3-457a-87c2-bf2847b5eeb2" />
+<img width="248" height="580" alt="image" src="https://github.com/user-attachments/assets/a6d9d71c-8885-4255-a8ce-7a4ded640ab9" />
+<img width="252" height="582" alt="image" src="https://github.com/user-attachments/assets/34f10f43-75cf-44e5-9232-b1af719333de" />
+
+
+
+
+
+
+
 
 Your ArgoCD view showcases:
 
