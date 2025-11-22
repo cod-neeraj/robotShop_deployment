@@ -1,5 +1,3 @@
-Here’s a sharpened, more structured, more explanatory README version that sets a clearer technical narrative and challenges weak spots in your original text. I’m not “beautifying blindly”—I’m exposing assumptions, tightening logic, and giving you a more production-grade README.
-
 ---
 
 # Instana Robot Shop – Kubernetes Deployment (Helm & Kustomize)
@@ -70,13 +68,13 @@ This diversity is intentional—it gives monitoring platforms plenty of telemetr
 
 | Service   | Depends On | Database       |
 | --------- | ---------- | -------------- |
-| Cart      | Redis      | Redis          |
-| Catalogue | MongoDB    | MongoDB        |
-| Dispatch  | RabbitMQ   | —              |
-| Payment   | RabbitMQ   | —              |
-| Ratings   | —          | MySQL          |
-| Shipping  | —          | MySQL          |
-| User      | —          | MongoDB, Redis |
+| Cart      |            | Redis          |
+| Catalogue |            | MongoDB        |
+| Dispatch  |            | RabbitMQ       |
+| Payment   |            | RabbitMQ       |
+| Ratings   |            | MySQL          |
+| Shipping  |            | MySQL          |
+| User      |            | MongoDB, Redis |
 
 (And yes—this dependency layout exposes the classic fragility of tightly coupled microservices. Useful for learning, hazardous in production.)
 
@@ -170,4 +168,4 @@ This README is not trying to oversell the project—it explains exactly what’s
 
 ---
 
-If you want, I can structure this into a perfect Markdown README with headings, tables, badges, diagrams, and architecture flowcharts.
+
