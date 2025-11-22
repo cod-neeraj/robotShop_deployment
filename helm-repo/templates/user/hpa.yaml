@@ -8,13 +8,13 @@ spec:
     apiVersion: apps/v1
     kind: Deployment
     name: {{ .Values.services.user.name }}
-  minReplicas: {{ .Values.services.user.user.minReplicas }}
-  maxReplicas: {{ .Values.services.user.user.maxReplicas }}
+  minReplicas: {{ .Values.services.user.minReplicas }}
+  maxReplicas: {{ .Values.services.user.maxReplicas }}
   metrics:
     - type: Resource
       resource:
         name: cpu
         target:
           type: Utilization
-          averageUtilization: {{ .Values.services.user.user.targetCPUUtilizationPercentage }}
+          averageUtilization: {{ .Values.services.user.targetCPUUtilizationPercentage }}
 {{- end }}
