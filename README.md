@@ -158,14 +158,6 @@ Both outputs drive the same multi-node cluster setup.
 <img width="252" height="582" alt="image" src="https://github.com/user-attachments/assets/34f10f43-75cf-44e5-9232-b1af719333de" />
 
 
-
-
-
-
-
-
-Your ArgoCD view showcases:
-
 * Multi-node clusters
 * Application grouping
 * Sync strategy
