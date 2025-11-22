@@ -1,20 +1,20 @@
-{{- if .Values.services.ratings.user.enabled }}
+{{- if .Values.services.user.user.enabled }}
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: {{ .Values.services.ratings.name }}
+  name: {{ .Values.services.user.name }}
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: {{ .Values.services.ratings.name }}
-  minReplicas: {{ .Values.services.ratings.user.minReplicas }}
-  maxReplicas: {{ .Values.services.ratings.user.maxReplicas }}
+    name: {{ .Values.services.user.name }}
+  minReplicas: {{ .Values.services.user.user.minReplicas }}
+  maxReplicas: {{ .Values.services.user.user.maxReplicas }}
   metrics:
     - type: Resource
       resource:
         name: cpu
         target:
           type: Utilization
-          averageUtilization: {{ .Values.services.ratings.user.targetCPUUtilizationPercentage }}
+          averageUtilization: {{ .Values.services.user.user.targetCPUUtilizationPercentage }}
 {{- end }}
