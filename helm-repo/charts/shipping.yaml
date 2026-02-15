@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shipping-dep
+  labels:
+    app: shipping
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: shipping
+  template:
+    metadata:
+      labels:
+        app: shipping
+    spec:
+      nodeSelector:
+        node-role: service
+
+      # affinity:
+      #   podAntiAffinity:
+      #     requiredDuringSchedulingIgnoredDuringExecution:
+      #     - labelSelector:
+      #         matchLabels:
+      #           app: shipping
+      #       topologyKey: kubernetes.io/hostname
+      initContainers:
+       - name: wait-for-mysql
+         image: busybox:1.36
+         command:
+          - sh
+          - -c
+          - |
+           echo "Waiting for Mysql..."
+           until nc -z mysql 3306 >/dev/null 2>&1; do
+           echo "Mysql not ready, retrying..."
+           sleep 2
+           done
+           echo "Mysql is ready!"
+
+      containers:
+        - name: shipping
+          image: robotshop/rs-shipping:2.1.0
+          ports:
+            - containerPort: 8080
+          env:
+            - name: MYSQL_HOST
+              value: mysql-headless
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: shipping-svc
+spec:
+  selector:
+    app: shipping
+  ports:
+    - port: 8080
+      targetPort: 8080

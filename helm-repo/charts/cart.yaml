@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cart-dep
+  labels:
+    app: cart
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: cart
+  template:
+    metadata:
+      labels:
+        app: cart
+    spec:
+      nodeSelector:
+        node-role: service
+
+      # affinity:
+      #   podAntiAffinity:
+      #     requiredDuringSchedulingIgnoredDuringExecution:
+      #       - labelSelector:
+      #           matchLabels:
+      #             app: cart
+      #         topologyKey: kubernetes.io/hostname
+
+      initContainers:
+        - name: wait-for-redis
+          image: busybox:1.36
+          command:
+            - sh
+            - -c
+            - |
+              echo "Waiting for Redis..."
+              until nc -z redis 6379 >/dev/null 2>&1; do
+                echo "Redis not ready, retrying..."
+                sleep 2
+              done
+              echo "Redis is ready!"
+
+      containers:
+        - name: cart
+          image: robotshop/rs-cart:2.1.0
+          ports:
+            - containerPort: 80
+          env:
+            - name: INSTANA_DISABLED
+              value: "true"
+            - name: REDIS_HOST
+              value: redis-headless
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cart-svc
+spec:
+  selector:
+    app: cart
+  ports:
+    - port: 8080
+      targetPort: 8080
