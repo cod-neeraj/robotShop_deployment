@@ -21,7 +21,7 @@ spec:
        - name: wait-for-catalogue
          image: busybox:1.36
          command:
-         - shk
+         - sh
          - -c
          - |
           echo "Waiting for catalogue..."
