@@ -16,14 +16,13 @@ spec:
     spec:
       nodeSelector:
         node-role: service
-
-      # affinity:
-      #   podAntiAffinity:
-      #     requiredDuringSchedulingIgnoredDuringExecution:
-      #     - labelSelector:
-      #         matchLabels:
-      #           app: user
-      #       topologyKey: kubernetes.io/hostname
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchLabels:
+                app: user
+            topologyKey: kubernetes.io/hostname
       initContainers:
        - name: wait-for-mysql
          image: busybox:1.36
