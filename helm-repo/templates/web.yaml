@@ -24,11 +24,11 @@ spec:
            - sh
            - -c
             - |
-                echo "Waiting for catalogue..."
-                until wget -qO- http://catalogue:8080/health; do
-                 sleep 2
-                done
-                echo "Catalogue ready!"
+              echo "Waiting for catalogue..."
+              until wget -qO- http://catalogue:8080/health; do
+                sleep 2
+              done
+              echo "Catalogue ready!"
         #  command:
         #    - sh
         #    - -c
