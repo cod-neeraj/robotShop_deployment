@@ -23,14 +23,23 @@ spec:
          command:
            - sh
            - -c
-           - |
-             for svc in catalogue user cart shipping payment ratings; do
-                echo "Waiting for $svc..."
-                until nc -z $svc 8080; do
-                  sleep 2
+            - |
+                echo "Waiting for catalogue..."
+                until wget -qO- http://catalogue:8080/health; do
+                 sleep 2
                 done
-             done
-             echo "All dependencies ready!"
+                echo "Catalogue ready!"
+        #  command:
+        #    - sh
+        #    - -c
+        #    - |
+        #      for svc in catalogue user cart shipping payment ratings; do
+        #         echo "Waiting for $svc..."
+        #         until nc -z $svc 8080; do
+        #           sleep 2
+        #         done
+        #      done
+        #      echo "All dependencies ready!"
 
 
       containers:
