@@ -32,7 +32,7 @@ spec:
           - |
            echo "Waiting for Mysql..."
            until nc -z mysql 3306 >/dev/null 2>&1; do
-             echo "Mygsql not ready, retrying..."
+             echo "Mysql not ready, retrying..."
              sleep 2
            done
            echo "Mysql is ready!"
@@ -54,5 +54,5 @@ spec:
   selector:
     app: ratings
   ports:
-    - port: 80
-      targetPort: 8080
+    - port: 8080
+      targetPort: 80
