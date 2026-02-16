@@ -24,7 +24,7 @@ spec:
            - sh
            - -c
            - |
-             for svc in catalogue user cart shipping payment ratings; do
+             for svc in catalogue user cart shipping payment; do
                echo "Waiting for $svc..."
                until nc -z $svc 8080; do
                 sleep 2
