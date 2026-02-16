@@ -21,15 +21,16 @@ spec:
        - name: wait-for-catalogue
          image: busybox:1.36
          command:
-         - sh
-         - -c
-         - |
-          echo "Waiting for catalogue..."
-          until nc -z catalogue 8080; do
-             echo "Catalogue not ready, retrying..."
-             sleep 2
-          done
-          echo "Catalogue is ready!"
+           - sh
+           - -c
+           - |
+             for svc in catalogue user cart shipping payment ratings; do
+                echo "Waiting for $svc..."
+                until nc -z $svc 8080; do
+                  sleep 2
+                done
+             done
+             echo "All dependencies ready!"
 
 
       containers:
