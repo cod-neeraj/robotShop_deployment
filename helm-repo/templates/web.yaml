@@ -23,12 +23,13 @@ spec:
          command:
            - sh
            - -c
-            - |
-              echo "Waiting for catalogue..."
-              until wget -qO- http://catalogue:8080/health; do
+           - |
+             for svc in catalogue user cart shipping payment ratings; do
+              echo "Waiting for $svc..."
+              until wget -qO- http://$svc:8080/health; do
                 sleep 2
               done
-              echo "Catalogue ready!"
+              echo "$svc ready!"
         #  command:
         #    - sh
         #    - -c
