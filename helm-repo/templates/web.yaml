@@ -25,11 +25,12 @@ spec:
            - -c
            - |
              for svc in catalogue user cart shipping payment ratings; do
-              echo "Waiting for $svc..."
-              until nc -z $svc 8080; do
+               echo "Waiting for $svc..."
+               until nc -z $svc 8080; do
                 sleep 2
-              done
-              echo "$svc ready!"
+               done
+               echo "$svc ready!"
+             done
         #  command:
         #    - sh
         #    - -c
