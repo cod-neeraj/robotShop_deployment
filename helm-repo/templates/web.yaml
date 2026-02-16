@@ -21,11 +21,11 @@ spec:
        - name: wait-for-catalogue
          image: busybox:1.36
          command:
-         - sh
+         - shk
          - -c
          - |
           echo "Waiting for catalogue..."
-          until nc -z catalogue-svc 8080; do
+          until nc -z catalogue 8080; do
              echo "Catalogue not ready, retrying..."
              sleep 2
           done
