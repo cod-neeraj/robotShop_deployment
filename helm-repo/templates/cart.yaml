@@ -25,6 +25,11 @@ spec:
                   matchLabels:
                     app: cart
                 topologyKey: kubernetes.io/hostname
+      tolerations:
+        - key: "workload"
+          operator: "Equal"
+          value: "neeraj"
+          effect: "NoSchedule"
 
       initContainers:
         - name: wait-for-redis
