@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-catalogue-to-mongo
+  namespace: robot-shop
+spec:
+  podSelector:
+    matchLabels:
+      app: mongo
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: catalogue
+    ports:
+    - protocol: TCP
+      port: 27017
