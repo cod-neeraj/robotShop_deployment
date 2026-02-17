@@ -2,7 +2,6 @@ apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
   name: allow-catalogue-to-mongo
-  namespace: robot-shop
 spec:
   podSelector:
     matchLabels:
