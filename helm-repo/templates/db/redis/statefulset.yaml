@@ -32,7 +32,7 @@ spec:
         - name: redis
           image: redis:6.2-alpine
           ports:
-            - containerPort: 5672
+            - containerPort: 6379
           volumeMounts:
             - name: redis-storage
               mountPath: /var/lib/data

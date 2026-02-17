@@ -15,4 +15,4 @@ spec:
           app: cart
     ports:
     - protocol: TCP
-      port: 3306
+      port: 5672
