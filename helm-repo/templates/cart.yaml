@@ -16,20 +16,20 @@ spec:
     spec:
       nodeSelector:
         node-role: service
-      affinity:
-        podAntiAffinity:
-          preferredDuringSchedulingIgnoredDuringExecution:
-            - weight: 100
-              podAffinityTerm:
-                labelSelector:
-                  matchLabels:
-                    app: cart
-                topologyKey: kubernetes.io/hostname
-      tolerations:
-        - key: "workload"
-          operator: "Equal"
-          value: "neeraj"
-          effect: "NoSchedule"
+      # affinity:
+      #   podAntiAffinity:
+      #     preferredDuringSchedulingIgnoredDuringExecution:
+      #       - weight: 100
+      #         podAffinityTerm:
+      #           labelSelector:
+      #             matchLabels:
+      #               app: cart
+      #           topologyKey: kubernetes.io/hostname
+      # tolerations:
+      #   - key: "workload"
+      #     operator: "Equal"
+      #     value: "neeraj"
+      #     effect: "NoSchedule"
 
       initContainers:
         - name: wait-for-redis
