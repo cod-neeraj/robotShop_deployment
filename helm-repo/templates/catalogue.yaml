@@ -46,7 +46,7 @@ spec:
             - name: INSTANA_DISABLED
               value: "true"
             - name: MONGODB_HOST
-              value: mongo-headless
+              value: mongodb
 
 ---
 apiVersion: v1

@@ -44,7 +44,7 @@ spec:
             - containerPort: 8080
           env:
             - name: MYSQL_HOST
-              value: mysql-headless
+              value: mysql
 ---
 apiVersion: v1
 kind: Service
