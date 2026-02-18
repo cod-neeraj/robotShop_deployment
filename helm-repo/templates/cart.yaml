@@ -2,6 +2,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: cart-dep
+  annotations:
+    sidecar.istio.io/inject: "false"
   labels:
     app: cart
 spec:
