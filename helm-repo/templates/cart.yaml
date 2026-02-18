@@ -2,8 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: cart-dep
-  annotations:
-    sidecar.istio.io/inject: "false"
   labels:
     app: cart
 spec:
@@ -13,8 +11,10 @@ spec:
       app: cart
   template:
     metadata:
-      labels:
-        app: cart
+    annotations:
+     sidecar.istio.io/inject: "false"
+    labels:
+      app: cart
     spec:
       nodeSelector:
         node-role: service
