@@ -5,7 +5,7 @@ metadata:
   namespace: default
 spec:
   hosts:
-  - "instanaRobotshop.com"
+  - "*"
   gateways:
   - web-gateway
   http:
