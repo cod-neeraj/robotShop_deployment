@@ -14,7 +14,7 @@ spec:
         app: rabbit
     spec:
       nodeSelector:
-        node-role: db
+         workload: db
       # tolerations:
       #   - key: "workload"
       #     operator: "Equal"

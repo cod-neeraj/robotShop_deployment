@@ -15,7 +15,7 @@ spec:
         app: web
     spec:
       nodeSelector:
-        node-role: service
+       workload: service
 
       initContainers:
        - name: wait-for-catalogue

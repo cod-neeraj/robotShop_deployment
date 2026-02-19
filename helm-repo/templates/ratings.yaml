@@ -15,7 +15,7 @@ spec:
         app: ratings
     spec:
       nodeSelector:
-        node-role: service
+        workload: service
       affinity:
         podAntiAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:

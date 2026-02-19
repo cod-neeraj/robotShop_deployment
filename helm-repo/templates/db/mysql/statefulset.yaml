@@ -14,12 +14,12 @@ spec:
         app: mysql
     spec:
       nodeSelector:
-        node-role: db
-      tolerations:
-        - key: "workload"
-          operator: "Equal"
-          value: "neeraj"
-          effect: "NoSchedule"
+         workload: db
+      # tolerations:
+      #   - key: "workload"
+      #     operator: "Equal"
+      #     value: "neeraj"
+      #     effect: "NoSchedule"
 
       # affinity:
       #   podAntiAffinity:
