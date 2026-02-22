@@ -15,23 +15,22 @@ spec:
         app: web
     spec:
       nodeSelector:
-       workload: service
+        workload: service
 
       initContainers:
-       - name: wait-for-catalogue
-         image: busybox:1.36
-         command:
-           - sh
-           - -c
-           - |
-             for svc in catalogue user cart shipping payment; do
-               echo "Waiting for $svc..."
-               until nc -z $svc 8080; do
-                sleep 2
-               done
-               echo "$svc ready!"
-             done
-
+        - name: wait-for-catalogue
+          image: busybox:1.36
+          command:
+            - sh
+            - -c
+            - |
+              for svc in catalogue user cart shipping payment; do
+                echo "Waiting for $svc..."
+                until nc -z $svc 8080; do
+                 sleep 2
+                done
+                echo "$svc ready!"
+              done
 
       containers:
         - name: web
@@ -39,8 +38,15 @@ spec:
           ports:
             - containerPort: 8080
           env:
-          - name: INSTANA_DISABLED
-            value: "true"
+            - name: INSTANA_DISABLED
+              value: "true"
+          resources:
+            requests:
+              cpu: "200m"
+              memory: "256Mi"
+            limits:
+              cpu: "500m"
+              memory: "512M"
 ---
 apiVersion: v1
 kind: Service
