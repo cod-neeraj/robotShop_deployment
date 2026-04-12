@@ -24,9 +24,9 @@ spec:
          - -c
          - |
           echo "Waiting for catalogue..."
-          until nc -z catalogue-dev 8080; do
-             echo "Catalogue not ready, retrying..."
-             sleep 2
+          until nc -z catalogue-dev 8080 >/dev/null 2>&1; do
+            echo "Catalogue not ready, retrying..."
+            sleep 2
           done
           echo "Catalogue is ready!"
 

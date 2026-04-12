@@ -13,6 +13,6 @@ spec:
         prefix: "/"
     route:
     - destination:
-        host: web-svc
+        host: web-service-dev
         port:
           number: 8080
