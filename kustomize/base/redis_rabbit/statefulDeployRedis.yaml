@@ -16,18 +16,18 @@ spec:
       nodeSelector:
         node-role: db
 
-      affinity:
-        podAntiAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            - labelSelector:
-                matchLabels:
-                  app: redis
-              topologyKey: kubernetes.io/hostname
+      # affinity:
+      #   podAntiAffinity:
+      #     requiredDuringSchedulingIgnoredDuringExecution:
+      #       - labelSelector:
+      #           matchLabels:
+      #             app: redis
+      #         topologyKey: kubernetes.io/hostname
       containers:
         - name: redis
           image: redis:6.2-alpine
           ports:
-            - containerPort: 5672
+            - containerPort: 6379
           resources:
             requests:
               cpu: "100m"
@@ -37,8 +37,7 @@ spec:
               memory: "512Mi"
           volumeMounts:
             - name: redis-storage
-              mountPath: /var/lib/data
-              subPath: redis 
+              mountPath: /data
 
   volumeClaimTemplates:
     - metadata:

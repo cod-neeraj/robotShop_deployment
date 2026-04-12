@@ -16,13 +16,13 @@ spec:
       nodeSelector:
         node-role: db 
 
-      affinity:
-        podAntiAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            - labelSelector:
-                matchLabels:
-                  app: mongo
-              topologyKey: kubernetes.io/hostname
+      # affinity:
+      #   podAntiAffinity:
+      #     requiredDuringSchedulingIgnoredDuringExecution:
+      #       - labelSelector:
+      #           matchLabels:
+      #             app: mongo
+      #         topologyKey: kubernetes.io/hostname
       containers:
         - name: mongo
           image: robotshop/rs-mongodb:2.1.0

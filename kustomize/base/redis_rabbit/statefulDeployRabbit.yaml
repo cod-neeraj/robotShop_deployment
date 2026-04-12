@@ -16,13 +16,13 @@ spec:
       nodeSelector:
         node-role: db
 
-      affinity:
-        podAntiAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            - labelSelector:
-                matchLabels:
-                  app: rabbit
-              topologyKey: kubernetes.io/hostname
+      # affinity:
+      #   podAntiAffinity:
+      #     requiredDuringSchedulingIgnoredDuringExecution:
+      #       - labelSelector:
+      #           matchLabels:
+      #             app: rabbit
+      #         topologyKey: kubernetes.io/hostname
       containers:
         - name: rabbit
           image: rabbitmq:3.8-management-alpine
