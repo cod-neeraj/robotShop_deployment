@@ -32,7 +32,7 @@ spec:
           - -c
           - |
            echo "Waiting for RabbitMQ..."
-           until nc -z rabbit-headless-dev 5672 >/dev/null 2>&1; do
+           until nc -z rabbit-headless 5672 >/dev/null 2>&1; do
            echo "RabbitMQ not ready, retrying..."
            sleep 2
            done
@@ -47,7 +47,7 @@ spec:
             - name: INSTANA_DISABLED
               value: "true"
             - name: RABBITMQ_HOST
-              value: rabbit-headless-dev
+              value: rabbit-headless
           resources:
             requests:
               cpu: "100m"

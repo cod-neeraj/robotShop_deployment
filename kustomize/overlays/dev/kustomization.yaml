@@ -2,9 +2,6 @@ resources:
   - ../../base
   - ../../hpa
   - ../../security
-
-nameSuffix: -dev
-
 patches:
   - path: patch-all-replicas.yaml
     target:

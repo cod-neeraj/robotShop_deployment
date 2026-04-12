@@ -32,7 +32,7 @@ spec:
           - -c
           - |
            echo "Waiting for Mysql..."
-           until nc -z mysql-headless-dev 3306 >/dev/null 2>&1; do
+           until nc -z mysql-headless 3306 >/dev/null 2>&1; do
            echo "Mysql not ready, retrying..."
            sleep 2
            done
@@ -45,7 +45,7 @@ spec:
             - containerPort: 8080
           env:
             - name: MYSQL_HOST
-              value: mysql-headless-dev
+              value: mysql-headless
           resources:
             requests:
               cpu: "100m"
