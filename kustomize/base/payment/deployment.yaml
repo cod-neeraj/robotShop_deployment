@@ -47,7 +47,7 @@ spec:
             - name: INSTANA_DISABLED
               value: "true"
             - name: RABBITMQ_HOST
-              value: rabbit-headless
+              value: rabbit-headless-dev
           resources:
             requests:
               cpu: "100m"

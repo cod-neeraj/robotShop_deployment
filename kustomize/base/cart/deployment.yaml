@@ -48,7 +48,7 @@ spec:
             - name: INSTANA_DISABLED
               value: "true"
             - name: REDIS_HOST
-              value: redis-headless
+              value: redis-headless-dev
           resources:
             requests:
               cpu: "100m"

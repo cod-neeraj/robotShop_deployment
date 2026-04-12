@@ -45,7 +45,7 @@ spec:
             - containerPort: 80
           env:
             - name: MYSQL_HOST
-              value: mysql-headless
+              value: mysql-headless-dev
           resources:
             requests:
               cpu: "100m"
