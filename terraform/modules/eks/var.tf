@@ -9,6 +9,11 @@ variable "eks_cluster_arn" {
 variable "node_arn" {
     type = string
 }
+
+variable "ebs_csi_arn" {
+    type = string
+}
+
 variable "private_subnet_ids" {
   type = list(string)
 }
