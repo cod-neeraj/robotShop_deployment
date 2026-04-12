@@ -56,7 +56,7 @@ module "eks" {
   eks_cluster_arn    = module.iam.eks_cluster_arn
   node_arn           = module.iam.node_arn
   node_instance_type = var.node_instance_type
-  ebs_csi_arn = module.iam.ebs_csi_arn
+  ebs_csi_arn        = module.iam.ebs_csi_arn
 
 
 }

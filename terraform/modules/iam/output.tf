@@ -7,5 +7,5 @@ output "node_arn" {
 }
 
 output "ebs_csi_arn" {
-    value = ebs_csi.arn
+  value = aws_iam_role.ebs_csi.arn
 }
