@@ -1,0 +1,14 @@
+resources:
+  - cartHpa.yaml
+  - catalogueHpa.yaml
+  - dispatchHpa.yaml
+  - mongoHpa.yaml
+  - mysqlHpa.yaml
+  - ratingsHpa.yaml
+  - shippingHpa.yaml
+  - userHpa.yaml
+  - webHpa.yaml
+  - paymentHpa.yaml
+  - rabbitHpa.yaml
+  - redisHpa.yaml
+

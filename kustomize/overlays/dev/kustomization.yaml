@@ -1,5 +1,7 @@
 resources:
   - ../../base
+  - ../../hpa
+  - ../../security
 
 nameSuffix: -dev
 
