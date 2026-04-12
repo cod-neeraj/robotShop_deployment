@@ -5,3 +5,7 @@ output "eks_cluster_arn" {
 output "node_arn" {
     value = aws_iam_role.node.arn
 }
+
+output "ebs_csi_arn" {
+    value = ebs_csi.arn
+}
