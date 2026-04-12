@@ -28,6 +28,13 @@ spec:
           image: robotshop/rs-mongodb:2.1.0
           ports:
             - containerPort: 27017
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "256Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
           volumeMounts:
             - name: mongo-storage
               mountPath: /data/db
@@ -35,6 +42,7 @@ spec:
     - metadata:
         name: mongo-storage
       spec:
+        storageClassName: gp2 
         accessModes: ["ReadWriteOnce"]
         resources:
           requests:

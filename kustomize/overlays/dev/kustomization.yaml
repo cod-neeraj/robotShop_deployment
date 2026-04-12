@@ -9,4 +9,8 @@ patches:
   - path: patch-all-replicas.yaml
     target:
       kind: Deployment
+
+  - path: patch-all-replicas.yaml
+    target:
+      kind: StatefulSet
   

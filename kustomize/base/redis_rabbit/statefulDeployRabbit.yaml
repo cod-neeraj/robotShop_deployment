@@ -38,6 +38,13 @@ spec:
           ports:
             - containerPort: 5672
             - containerPort: 15672
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "256Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
 
           volumeMounts:
             - name: rabbit-storage
@@ -46,6 +53,7 @@ spec:
     - metadata:
         name: rabbit-storage
       spec:
+        storageClassName: gp2
         accessModes: ["ReadWriteOnce"]
         resources:
           requests:

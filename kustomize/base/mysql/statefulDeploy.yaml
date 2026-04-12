@@ -28,14 +28,23 @@ spec:
           image: robotshop/rs-mysql-db:2.1.0
           ports:
             - containerPort: 3306
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "256Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
           volumeMounts:
             - name: mysql-storage
               mountPath: /var/lib/mysql
               subPath: mysql 
+          
   volumeClaimTemplates:
     - metadata:
         name: mysql-storage
       spec:
+        storageClassName: gp2 
         accessModes: ["ReadWriteOnce"]
         resources:
           requests:
