@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: mongo-dev
+  name: mongo
 spec:
   serviceName: mongo-headless
   replicas: 1

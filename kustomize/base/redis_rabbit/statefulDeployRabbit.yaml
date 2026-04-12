@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: rabbit-dev
+  name: rabbit
 spec:
   serviceName: rabbit-headless
   replicas: 1
