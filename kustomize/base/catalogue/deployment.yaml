@@ -3,16 +3,16 @@ kind: Deployment
 metadata:
   name: catalogue-dep
   labels:
-    app: catalogue-dp
+    app: catalogue
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: catalogue-dp
+      app: catalogue
   template:
     metadata:
       labels:
-        app: catalogue-dp
+        app: catalogue
     spec:
       nodeSelector:
         node-role: app
@@ -64,7 +64,7 @@ metadata:
   name: catalogue
 spec:
   selector:
-    app: catalogue-dp
+    app: catalogue
   ports:
     - port: 8080
       targetPort: 8080
