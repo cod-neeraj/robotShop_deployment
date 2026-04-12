@@ -42,7 +42,7 @@ resource "aws_iam_role" "ebs_csi" {
       {
         Effect = "Allow"
         Principal = {
-          Federated = var.oidc_provider_url
+          Federated = var.oidc_provider_arn
         }
         Action = "sts:AssumeRoleWithWebIdentity"
         Condition = {
