@@ -43,7 +43,7 @@ spec:
     - metadata:
         name: redis-storage
       spec:
-        storageClassName: gp2
+        storageClassName: manual
         accessModes: ["ReadWriteOnce"]
         resources:
           requests:
