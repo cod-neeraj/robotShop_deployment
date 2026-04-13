@@ -98,9 +98,9 @@ Istio Ingress Gateway
 
 The cluster separates stateful and stateless workloads — a pattern that matters in production:
 
-**Application nodes (×5)** handle all microservice pods. Spread using pod anti-affinity to avoid co-location of critical replicas.
+**Application nodes (×2)** handle all microservice pods. Spread using pod anti-affinity to avoid co-location of critical replicas.
 
-**Database nodes (×3)** are isolated with taints and tolerations. Only database pods can schedule here, preventing compute workloads from starving DB I/O.
+**Database nodes (×1)** are isolated with taints and tolerations. Only database pods can schedule here, preventing compute workloads from starving DB I/O.
 
 ```yaml
 # Example: DB node taint
@@ -131,18 +131,7 @@ Three layers of scheduling control are applied:
 
 ## 🚀 Deployment Methods
 
-Both Helm and Kustomize are implemented so you can compare real-world approaches:
-
-### Helm (Templated Deployment)
-
-Best for repeatable, environment-configurable rollouts. Values can be overridden per environment without touching manifests.
-
-```bash
-helm install robot-shop ./helm/ \
-  --namespace robot-shop \
-  --create-namespace \
-  -f values.prod.yaml
-```
+Kustomize is implemented so you can compare real-world approaches:
 
 ### Kustomize (Overlay-Based Deployment)
 
@@ -152,7 +141,6 @@ Best for declarative environment variations without templating complexity.
 kubectl apply -k kustomize/overlays/production/
 ```
 
-Both methods target the same multi-node EKS cluster with identical scheduling and resource configurations.
 
 ---
 
@@ -168,7 +156,8 @@ The cluster is managed via ArgoCD — every change goes through Git, not `kubect
 
 ### ArgoCD Screenshots
 
-> *(Add screenshots here)*
+<img width="1406" height="444" alt="Screenshot 2026-04-13 182618" src="https://github.com/user-attachments/assets/ceb64a4d-d6ce-4422-a71d-2210eccd1ee3" />
+
 
 ---
 
@@ -241,8 +230,8 @@ export default function () {
 | Max spike observed | ~8s (investigated — traced to DB cold start) |
 
 ### k6 Screenshots
+<img width="978" height="773" alt="Screenshot 2026-04-13 182755" src="https://github.com/user-attachments/assets/fcf63160-069a-4728-bf4a-b5f57b3de278" />
 
-> *(Add k6 output screenshots here)*
 
 ---
 
@@ -263,14 +252,14 @@ spec:
     kind: Deployment
     name: catalogue
   minReplicas: 1
-  maxReplicas: 10
+  maxReplicas: 5
   metrics:
     - type: Resource
       resource:
         name: cpu
         target:
           type: Utilization
-          averageUtilization: 70
+          averageUtilization: 50
 ```
 
 ### What Actually Happened Under Load
@@ -286,11 +275,6 @@ spec:
 Vertical Pod Autoscaling was also deployed alongside HPA to right-size resource requests based on observed usage. Running both is uncommon but powerful — it prevents over-provisioning while HPA handles burst scaling.
 
 > ⚠️ **Note:** HPA + VPA together requires careful tuning. VPA changing resource requests can interfere with HPA's CPU utilization calculation if not configured correctly (VPA set to `UpdateMode: Off` for HPA-managed deployments).
-
-### HPA Scaling Screenshots
-
-> *(Add kubectl get hpa output + Grafana scaling screenshots here)*
-
 ---
 
 ## 🔍 Observability Stack
@@ -447,23 +431,10 @@ k6 run k6/load-test.js \
 ```
 
 ---
-
-## 📸 Screenshots
-
-> **Grafana Dashboards**
-> *(Add screenshots)*
-
-> **HPA Scaling Output**
-> *(Add screenshots)*
-
-> **k6 Load Test Results**
-> *(Add screenshots)*
-
-> **ArgoCD UI**
-> *(Add screenshots)*
-
-> **Istio Traffic Graph**
-> *(Add screenshots)*
+ <img width="1892" height="502" alt="image" src="https://github.com/user-attachments/assets/5aa50764-4460-495c-98a4-4fcb8f33f715" />
+<img width="1892" height="903" alt="image" src="https://github.com/user-attachments/assets/57907ff9-51c2-4c09-9d9b-7211eefbc200" />
+<img width="1592" height="776" alt="image" src="https://github.com/user-attachments/assets/0d6627c4-31ad-4335-b1b8-d47780744c00" />
+<img width="1891" height="898" alt="image" src="https://github.com/user-attachments/assets/582a508d-02de-44d7-89f7-a63653d0ca4d" />
 
 ---
 
@@ -482,4 +453,5 @@ This project demonstrates practical, hands-on experience with:
 | **GitOps** | ArgoCD managing full application lifecycle |
 | **Deployment tooling** | Helm + Kustomize, both approaches implemented and compared |
 
-The difference between this and a tutorial project: **things were broken, debugged, and fixed** — and that's documented here.
+The difference between this and a tutorial project: **things were broken, debugged, and fixed** — and that's documented here. 
+
