@@ -17,13 +17,13 @@ spec:
       nodeSelector:
         node-role: app
 
-      affinity:
-        podAntiAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-          - labelSelector:
-              matchLabels:
-                app: dispatch
-            topologyKey: kubernetes.io/hostname
+      # affinity:
+      #   podAntiAffinity:
+      #     requiredDuringSchedulingIgnoredDuringExecution:
+      #     - labelSelector:
+      #         matchLabels:
+      #           app: dispatch
+      #       topologyKey: kubernetes.io/hostname
       initContainers:
        - name: wait-for-rabbitmq
          image: busybox:1.36
