@@ -1,0 +1,23 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: web-deployment-cpu-alert
+  namespace: monitoring   
+  labels:
+    release: monitoring
+spec:
+  groups:
+  - name: deployment-alerts
+    rules:
+    - alert: HighCPUUsageWebDeployment
+      expr: sum(rate(container_cpu_usage_seconds_total{
+        namespace="robot",                 
+        container!="",
+        pod=~"web-.*"                      
+        [1m])) > 0.5
+      for: 1m
+      labels:
+        severity: warning
+      annotations:
+        summary: "High CPU usage in web deployment"
+        description: "Web deployment pods are consuming high CPU (>0.5 cores)"
