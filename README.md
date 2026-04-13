@@ -1,176 +1,485 @@
----
+# 🤖 Stan's Robot Shop — Production-Grade Microservices on AWS EKS
 
-# Instana Robot Shop – Kubernetes Deployment (Helm & Kustomize)
+> Deployed, stress-tested, and broken on purpose. This is what a real Kubernetes project looks like.
 
-## Overview
-
-This repository contains Kubernetes manifests for deploying **Stan’s Robot Shop**, a sample microservices application commonly used to explore container orchestration, distributed architecture patterns, and full-stack observability with tools like Instana.
-
-Rather than treating this as a generic demo, this repository intentionally pushes the architecture toward a more realistic environment—including **multi-node topology**, **affinity rules**, **scaling strategies**, and **health checks**—so you can stress-test monitoring and scheduling behaviors.
-
----
-
-## What Is Robot Shop?
-
-Stan’s Robot Shop is not a perfectly engineered microservice system—nor does it try to be. It’s a deliberately imperfect sandbox where you can observe:
-
-* **Service-to-service communication**
-* **Database interactions**
-* **Distributed request flows**
-* **Messaging queues**
-* **Polyglot service design**
-* **Latency, failure, and scaling behavior**
-
-Despite its simplicity, it uses a wide mix of technologies:
-
-| Technology         | Used In                   |
-| ------------------ | ------------------------- |
-| NodeJS (Express)   | Web frontend / API pieces |
-| Java (Spring Boot) | Backend services          |
-| Python (Flask)     | Utility microservices     |
-| Golang             | Lightweight services      |
-| PHP (Apache)       | API components            |
-| MongoDB            | NoSQL service backing     |
-| Redis              | Cache + session storage   |
-| MySQL              | Structured data           |
-| RabbitMQ           | Asynchronous messaging    |
-| Nginx              | Web serving layer         |
-| AngularJS 1.x      | Frontend UI               |
-
-This diversity is intentional—it gives monitoring platforms plenty of telemetry varieties to work with.
+[![Kubernetes](https://img.shields.io/badge/Kubernetes-EKS-326CE5?style=flat&logo=kubernetes&logoColor=white)](https://aws.amazon.com/eks/)
+[![Istio](https://img.shields.io/badge/Service_Mesh-Istio-466BB0?style=flat&logo=istio&logoColor=white)](https://istio.io/)
+[![Prometheus](https://img.shields.io/badge/Monitoring-Prometheus-E6522C?style=flat&logo=prometheus&logoColor=white)](https://prometheus.io/)
+[![Grafana](https://img.shields.io/badge/Dashboards-Grafana-F46800?style=flat&logo=grafana&logoColor=white)](https://grafana.com/)
+[![ArgoCD](https://img.shields.io/badge/GitOps-ArgoCD-EF7B4D?style=flat&logo=argo&logoColor=white)](https://argo-cd.readthedocs.io/)
 
 ---
 
-## Application Architecture
+## 📌 What This Project Actually Is
 
-### Microservices Included (8 Total)
+This is **not** a "kubectl apply and call it done" project.
 
-* **User**
-* **Shipping**
-* **Ratings**
-* **Payment**
-* **Dispatch**
-* **Catalogue**
-* **Cart**
-* **Web**
+Stan's Robot Shop was deployed on a **multi-node AWS EKS cluster** and deliberately pushed beyond a standard deployment — with real traffic, real autoscaling, real failures, and real debugging. The goal was to understand how a distributed system **behaves under load**, where it **breaks**, and how to **fix it**.
 
-### Databases (3)
-
-* **MySQL**
-* **MongoDB**
-* **Redis**
-
-### Messaging System
-
-* **RabbitMQ**
-
-### Service Dependencies
-
-| Service   | Depends On | Database       |
-| --------- | ---------- | -------------- |
-| Cart      |            | Redis          |
-| Catalogue |            | MongoDB        |
-| Dispatch  |            | RabbitMQ       |
-| Payment   |            | RabbitMQ       |
-| Ratings   |            | MySQL          |
-| Shipping  |            | MySQL          |
-| User      |            | MongoDB, Redis |
-
-(And yes—this dependency layout exposes the classic fragility of tightly coupled microservices. Useful for learning, hazardous in production.)
+The focus throughout: **system behavior, not just configuration.**
 
 ---
 
-## What This Repository Implements
+## ⚡ Key Results (What Recruiters Care About)
 
-### 1. **Multi-Node Kubernetes Cluster**
-
-Your setup uses **8 nodes**:
-
-* **5 nodes for application workloads**
-* **3 nodes dedicated to databases**
-
-This mimics real-world segregation where:
-
-* Stateful components get stable, taint-protected nodes.
-* Application pods remain spread across compute nodes.
-
-### 2. **Pod & Node Scheduling Constraints**
-
-To enforce proper workload placement:
-
-* **Node affinity**
-* **Pod affinity / anti-affinity**
-* **Taints & tolerations**
-
-This is exactly the right approach for avoiding noisy-neighbor scenarios. Many people ignore these and then wonder why their DB performance collapses.
-
-### 3. **Scaling**
-
-Both scaling strategies are implemented:
-
-* **Horizontal Pod Autoscaling (HPA)**
-  Reacts to CPU/memory/metrics load.
-
-* **Vertical Pod Autoscaling (VPA)**
-  Adjusts resource requests based on usage.
-
-Using both together is uncommon but powerful—though it can cause resource contention if not tuned.
-
-### 4. **Readiness & Liveness Probes**
-
-Health checks are added to ensure:
-
-* Pods don’t serve traffic before they’re ready.
-* Faulty services restart automatically.
-
-This matters especially in Robot Shop because services start at different times and dependencies sometimes lag.
+| Metric | Result |
+|---|---|
+| 🚀 Peak throughput | **~4,850 requests/sec** |
+| ✅ Failure rate at 1000 concurrent users | **~0%** |
+| ⚡ p95 latency | **~195 ms** |
+| 🔍 Bottleneck identified | **Catalogue service at >170% CPU** |
+| 🔧 Critical bug fixed | **Istio routing misconfiguration blocking traffic distribution** |
+| 📈 HPA validated | **Live autoscaling under sustained load** |
 
 ---
 
-## Deployment Methods
+## 🏗️ Architecture Overview
 
-This repo offers both approaches so you can compare them:
+```
+Users
+  │
+  ▼
+AWS Elastic Load Balancer
+  │
+  ▼
+Istio Ingress Gateway
+  │
+  ├──► Web (NodeJS Frontend)
+  ├──► Catalogue ──► MongoDB
+  ├──► Cart ──────► Redis
+  ├──► User ──────► MongoDB + Redis
+  ├──► Shipping ──► MySQL
+  ├──► Ratings ───► MySQL
+  ├──► Payment ───► RabbitMQ
+  └──► Dispatch ──► RabbitMQ
+         │
+         ▼
+  Prometheus ──► Grafana Dashboards
+```
 
-### **1. Helm-Based Deployment**
-
-* Templated
-* Highly configurable
-* Better for repeatable production-style deployments
-
-### **2. Kustomize Deployment**
-
-* Patch-oriented customization
-* Declarative overlays
-* Ideal for environment-based variations
-
-Both outputs drive the same multi-node cluster setup.
-
----
-
-## ArgoCD Integration
-
-<img width="1377" height="427" alt="image" src="https://github.com/user-attachments/assets/3e1c9eea-1b3d-49fd-8671-ce7e6f783a23" />
-<img width="1395" height="441" alt="image" src="https://github.com/user-attachments/assets/091cc461-b8c8-419b-b9a1-fc2e470859aa" />
-<img width="941" height="432" alt="image" src="https://github.com/user-attachments/assets/264caed0-2ee4-4489-b3f6-36423e0b6cd1" />
-<img width="247" height="573" alt="image" src="https://github.com/user-attachments/assets/807b39de-f18e-4a58-94b5-47ab079b01e3" />
-<img width="240" height="562" alt="image" src="https://github.com/user-attachments/assets/cae824b0-88e3-457a-87c2-bf2847b5eeb2" />
-<img width="248" height="580" alt="image" src="https://github.com/user-attachments/assets/a6d9d71c-8885-4255-a8ce-7a4ded640ab9" />
-<img width="252" height="582" alt="image" src="https://github.com/user-attachments/assets/34f10f43-75cf-44e5-9232-b1af719333de" />
-
-
-* Multi-node clusters
-* Application grouping
-* Sync strategy
-* Health & rollout status
-
-This is extremely useful when demonstrating GitOps flows.
+**8-node cluster topology:**
+- **5 nodes** → stateless application workloads
+- **3 nodes** → dedicated database workloads (isolated with taints)
 
 ---
 
-## Final Notes
+## 🧰 Tech Stack
 
-This README is not trying to oversell the project—it explains exactly what’s implemented, why it is structured this way, and how it strengthens observability experiments. If you're using Instana or another APM, this architecture gives you rich traces, queue dynamics, cross-service dependency visualization, and scaling signals.
+### Application Layer (Polyglot Microservices)
+
+| Service | Language | Database |
+|---|---|---|
+| Web | NodeJS + AngularJS | — |
+| Catalogue | NodeJS (Express) | MongoDB |
+| Cart | — | Redis |
+| User | — | MongoDB + Redis |
+| Shipping | Java (Spring Boot) | MySQL |
+| Ratings | PHP (Apache) | MySQL |
+| Payment | Python (Flask) | RabbitMQ |
+| Dispatch | Golang | RabbitMQ |
+
+### Infrastructure Layer
+
+| Component | Tool |
+|---|---|
+| Container Orchestration | AWS EKS (Kubernetes) |
+| Service Mesh | Istio |
+| Package Management | Helm + Kustomize |
+| GitOps | ArgoCD |
+| Monitoring | Prometheus + Grafana |
+| Load Testing | k6 |
+| Messaging | RabbitMQ |
 
 ---
 
+## ⚙️ Infrastructure Design
 
+### Multi-Node EKS Cluster
+
+The cluster separates stateful and stateless workloads — a pattern that matters in production:
+
+**Application nodes (×5)** handle all microservice pods. Spread using pod anti-affinity to avoid co-location of critical replicas.
+
+**Database nodes (×3)** are isolated with taints and tolerations. Only database pods can schedule here, preventing compute workloads from starving DB I/O.
+
+```yaml
+# Example: DB node taint
+taints:
+  - key: "workload"
+    value: "database"
+    effect: "NoSchedule"
+
+# DB pod toleration
+tolerations:
+  - key: "workload"
+    operator: "Equal"
+    value: "database"
+    effect: "NoSchedule"
+```
+
+**Why this matters:** Without node isolation, a CPU-hungry microservice pod can be co-located with MongoDB, and suddenly your DB performance collapses under load. Many projects skip this and then misdiagnose the root cause.
+
+### Scheduling Constraints
+
+Three layers of scheduling control are applied:
+
+- **Node affinity** — forces pods to specific node types
+- **Pod affinity** — co-locates related services for lower latency
+- **Pod anti-affinity** — spreads replicas across nodes for availability
+
+---
+
+## 🚀 Deployment Methods
+
+Both Helm and Kustomize are implemented so you can compare real-world approaches:
+
+### Helm (Templated Deployment)
+
+Best for repeatable, environment-configurable rollouts. Values can be overridden per environment without touching manifests.
+
+```bash
+helm install robot-shop ./helm/ \
+  --namespace robot-shop \
+  --create-namespace \
+  -f values.prod.yaml
+```
+
+### Kustomize (Overlay-Based Deployment)
+
+Best for declarative environment variations without templating complexity.
+
+```bash
+kubectl apply -k kustomize/overlays/production/
+```
+
+Both methods target the same multi-node EKS cluster with identical scheduling and resource configurations.
+
+---
+
+## 🔁 GitOps with ArgoCD
+
+The cluster is managed via ArgoCD — every change goes through Git, not `kubectl apply` on a laptop.
+
+**What ArgoCD manages here:**
+- Application grouping by service
+- Automated sync on Git push
+- Health status and rollout visibility
+- Drift detection between desired and live state
+
+### ArgoCD Screenshots
+
+> *(Add screenshots here)*
+
+---
+
+## 🔀 Istio Service Mesh & The Bug I Had to Fix
+
+### The Problem
+
+After deploying Istio, all inbound traffic was being routed **only to the Web service**. Under load testing, only Web pods were scaling — everything else sat idle. The performance numbers looked acceptable, but they were measuring the **wrong thing**.
+
+**Root cause:** The Istio VirtualService was missing path-based routing rules. All traffic defaulted to the frontend.
+
+### The Fix
+
+```yaml
+# VirtualService — path-based routing
+http:
+  - match:
+      - uri:
+          prefix: /api/catalogue
+    route:
+      - destination:
+          host: catalogue
+  - match:
+      - uri:
+          prefix: /api/user
+    route:
+      - destination:
+          host: user
+  - route:
+      - destination:
+          host: web
+```
+
+### Result After Fix
+
+| Before | After |
+|---|---|
+| Only Web scaled | Multiple services scaled under HPA |
+| Catalogue idle | Catalogue hit >170% CPU — real bottleneck exposed |
+| Performance numbers misleading | Accurate service-level load distribution |
+
+**Key lesson:** Routing configuration directly affects what your autoscaler sees. If traffic never reaches a service, its HPA will never trigger — and you'll miss the actual bottleneck entirely.
+
+---
+
+## 📊 Load Testing with k6
+
+Realistic user behavior was simulated — not just hitting one endpoint:
+
+```javascript
+// k6 script: simulated user journey
+export default function () {
+  http.get(`${BASE_URL}/`);                    // Homepage
+  http.get(`${BASE_URL}/api/catalogue/`);      // Browse products
+  http.get(`${BASE_URL}/api/catalogue/${id}`); // Product detail
+  sleep(1);
+}
+```
+
+**Test configuration:** 1,000 virtual users (VUs), sustained load, ramped over time.
+
+### Results
+
+| Metric | Value |
+|---|---|
+| Throughput | ~4,850 req/sec |
+| p95 latency | ~195 ms |
+| p99 latency | ~410 ms |
+| Failure rate | ~0% |
+| Max spike observed | ~8s (investigated — traced to DB cold start) |
+
+### k6 Screenshots
+
+> *(Add k6 output screenshots here)*
+
+---
+
+## 📈 Autoscaling (HPA + VPA)
+
+### HPA Configuration
+
+CPU-based HPA was configured per service with individual thresholds:
+
+```yaml
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: catalogue
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: catalogue
+  minReplicas: 1
+  maxReplicas: 10
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
+```
+
+### What Actually Happened Under Load
+
+| Service | Behavior |
+|---|---|
+| Catalogue | Scaled to max replicas — confirmed CPU bottleneck at >170% |
+| Web | Scaled moderately — handled frontend load |
+| Cart, User, Payment | Remained near idle — traffic pattern didn't trigger them |
+
+### VPA
+
+Vertical Pod Autoscaling was also deployed alongside HPA to right-size resource requests based on observed usage. Running both is uncommon but powerful — it prevents over-provisioning while HPA handles burst scaling.
+
+> ⚠️ **Note:** HPA + VPA together requires careful tuning. VPA changing resource requests can interfere with HPA's CPU utilization calculation if not configured correctly (VPA set to `UpdateMode: Off` for HPA-managed deployments).
+
+### HPA Scaling Screenshots
+
+> *(Add kubectl get hpa output + Grafana scaling screenshots here)*
+
+---
+
+## 🔍 Observability Stack
+
+Real-time visibility into every layer of the system:
+
+**Prometheus** scrapes metrics from all pods, the Istio control plane, and node exporters.
+
+**Grafana** dashboards surface:
+- Per-service CPU and memory usage
+- Request rate and error rate per service
+- HPA replica counts over time
+- p95/p99 latency per endpoint
+- RabbitMQ queue depth
+
+**Istio telemetry** provides:
+- Service-to-service traffic maps
+- Distributed tracing (via Jaeger integration)
+- Latency breakdowns per hop
+
+### Grafana Dashboard Screenshots
+
+> *(Add Grafana screenshots here)*
+
+---
+
+## 💥 Chaos Engineering & Failure Testing
+
+Resilience was tested deliberately — not just hoped for.
+
+### Pod Failure
+
+```bash
+# Delete a running catalogue pod
+kubectl delete pod -l app=catalogue -n robot-shop
+```
+
+**Observed:** Kubernetes self-healing — new pod scheduled and running within ~15 seconds. No user-visible errors due to multiple replicas.
+
+### CPU Stress Injection
+
+```bash
+# Inject CPU stress inside a running pod
+kubectl exec -it <pod> -- stress --cpu 4 --timeout 60s
+```
+
+**Observed:** HPA detected CPU spike within ~30 seconds and began scaling. New replicas became ready and absorbed load.
+
+### Database Failure Simulation
+
+Simulated MongoDB downtime by scaling the MongoDB deployment to 0 replicas.
+
+**Observed:** Catalogue service began returning 5xx errors. Other services (Cart on Redis, Shipping on MySQL) continued operating normally — confirming proper service isolation.
+
+---
+
+## 🧠 What I Actually Learned
+
+These aren't "best practices" from a blog post. These came from breaking things and debugging them:
+
+**1. Routing config determines what your autoscaler sees.**
+HPA can't scale a service that never receives traffic. Getting Istio routing right was the prerequisite for everything else working.
+
+**2. CPU-based HPA is not always enough.**
+Under bursty I/O workloads, CPU stays low while latency spikes. Custom metrics (RPS, queue depth, latency) are needed for accurate scaling signals.
+
+**3. The 8-second latency spike was a DB cold start, not a CPU problem.**
+Observability with Grafana + Prometheus was what made this traceable. Without it, this would have looked like a random anomaly.
+
+**4. VPA + HPA together requires deliberate configuration.**
+Setting VPA to `UpdateMode: Off` on HPA-managed workloads prevents them from conflicting over resource requests.
+
+**5. Node isolation prevents invisible performance degradation.**
+Mixing stateful (DB) and stateless (app) workloads without taints causes noisy-neighbour issues that only show up under load.
+
+---
+
+## 🔮 Planned Improvements
+
+- [ ] Custom metrics HPA using Prometheus adapter (scale on RPS and p95 latency, not just CPU)
+- [ ] Full end-to-end user journey simulation in k6 (browse → cart → checkout → payment)
+- [ ] Database-level observability (MongoDB exporter, MySQL exporter, Redis exporter)
+- [ ] Canary deployments via Istio traffic splitting (10% → 50% → 100%)
+- [ ] CI/CD pipeline with GitHub Actions triggering ArgoCD sync
+- [ ] Karpenter for intelligent node autoscaling on EKS
+
+---
+
+## 📁 Repository Structure
+
+```
+.
+├── helm/                    # Helm chart for full deployment
+│   ├── templates/           # Kubernetes manifests (templated)
+│   └── values.yaml          # Default configuration values
+├── kustomize/               # Kustomize-based deployment
+│   ├── base/                # Base manifests
+│   └── overlays/            # Environment-specific patches
+│       ├── dev/
+│       └── production/
+├── k6/                      # Load testing scripts
+│   └── load-test.js
+├── monitoring/              # Prometheus + Grafana config
+│   ├── prometheus/
+│   └── grafana/dashboards/
+└── docs/                    # Architecture diagrams, screenshots
+```
+
+---
+
+## 🚀 Quick Start
+
+### Prerequisites
+
+- AWS EKS cluster (≥8 nodes recommended)
+- `kubectl`, `helm`, `istioctl` installed
+- ArgoCD deployed on cluster
+
+### Deploy with Helm
+
+```bash
+# 1. Add Istio and apply CRDs
+istioctl install --set profile=production -y
+
+# 2. Create namespace with Istio injection
+kubectl create namespace robot-shop
+kubectl label namespace robot-shop istio-injection=enabled
+
+# 3. Deploy Robot Shop
+helm install robot-shop ./helm/ \
+  --namespace robot-shop \
+  -f helm/values.yaml
+
+# 4. Verify all pods are running
+kubectl get pods -n robot-shop
+
+# 5. Get the external load balancer URL
+kubectl get svc -n istio-system istio-ingressgateway
+```
+
+### Deploy with Kustomize
+
+```bash
+kubectl apply -k kustomize/overlays/production/
+```
+
+### Run Load Test
+
+```bash
+k6 run k6/load-test.js \
+  --vus 1000 \
+  --duration 5m \
+  --env BASE_URL=http://<your-elb-url>
+```
+
+---
+
+## 📸 Screenshots
+
+> **Grafana Dashboards**
+> *(Add screenshots)*
+
+> **HPA Scaling Output**
+> *(Add screenshots)*
+
+> **k6 Load Test Results**
+> *(Add screenshots)*
+
+> **ArgoCD UI**
+> *(Add screenshots)*
+
+> **Istio Traffic Graph**
+> *(Add screenshots)*
+
+---
+
+## 🎯 Summary
+
+This project demonstrates practical, hands-on experience with:
+
+| Area | What Was Done |
+|---|---|
+| **Kubernetes scheduling** | Node affinity, taints, tolerations, pod anti-affinity on 8-node EKS |
+| **Service mesh** | Istio traffic routing, debugged and fixed a real misconfiguration |
+| **Autoscaling** | HPA + VPA deployed and validated under real load |
+| **Performance testing** | k6 at 1000 VUs, ~4850 RPS, p95 < 200ms |
+| **Observability** | Prometheus + Grafana, service-level metrics, latency tracing |
+| **Chaos engineering** | Pod failure, CPU stress injection, database downtime simulation |
+| **GitOps** | ArgoCD managing full application lifecycle |
+| **Deployment tooling** | Helm + Kustomize, both approaches implemented and compared |
+
+The difference between this and a tutorial project: **things were broken, debugged, and fixed** — and that's documented here.
