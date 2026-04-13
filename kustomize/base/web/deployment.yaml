@@ -41,10 +41,10 @@ spec:
             value: "true"
           resources:
             requests:
-              cpu: "200m"
+              cpu: "400m"
               memory: "128Mi"
             limits:
-              cpu: "500m"
+              cpu: "800m"
               memory: "256Mi"
 ---
 apiVersion: v1
